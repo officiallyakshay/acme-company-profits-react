@@ -17,7 +17,7 @@
     .home {
       display: flex;
       justify-content: center;
-      
+
     }
   </style>
 </head>
@@ -42,15 +42,52 @@
       )
     }
     const Companies = ( { companies, match } ) => {
-      console.log(match)
+      console.log(companies)
       return (
-        <ul> 
-          {
-            companies.map(company => <li key={company.id}>{company.name}</li>)
-          }
-        </ul>
+        <div id='content'>
+          <ul> 
+            {
+              companies.map(company => <li key={company.id}>
+              <Link to={`/companies/${company.id}`}>
+              { company.name }
+              </Link>
+            </li>)
+            }
+          </ul>
+        </div>
       )
       this.setState({companies})
+    }
+
+    class Company extends Component {
+      constructor() {
+        super();
+        this.state = {
+          company: {}
+        }
+      }
+      async componentDidMount() {
+        const company = (await axios.get(`https://acme-users-api-rev.herokuapp.com/api/companies/:id/companyProfits/${this.props.match.params.id}`)).data;
+        this.setState({ company });
+      }
+      async componentDidUpdate(prevProps) {
+        if (this.props.match.params.id !== prevProps.match.params.id) {
+          const company = (await axios.get(`https://acme-users-api-rev.herokuapp.com/api/companies/:id/companyProfits/${this.props.match.params.id}`)).data;
+          this.setState({ company });
+        }
+      }
+      render() {
+        const { company } = this.state;
+        console.log(company)
+        return (
+          <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        )
+      }
     }
 
     class App extends Component {
@@ -62,6 +99,7 @@
       }
       async componentDidMount() {
         const companies = (await axios.get('https://acme-users-api-rev.herokuapp.com/api/companies')).data;
+        console.log(companies);
         this.setState({companies});
       }
       render() {
@@ -71,7 +109,7 @@
           <Route render={()=> <Nav companies={companies}/>}/>
             <Switch>
               <Route exact path='/' component = { Home } />
-              <Route exact path='/companies' render = { () => <Companies companies={companies} /> } />
+              <Route path='/companies' render = { () => <Companies companies={companies} /> } />
               <Redirect to='/' />
             </Switch>
           </HashRouter>
