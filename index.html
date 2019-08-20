@@ -1,12 +1,11 @@
 <html>
-​
 <head>
   <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router-dom/5.0.1/react-router-dom.js"></script>
-​
+  
   <style>
     .nav {
       display: flex;
@@ -14,61 +13,56 @@
     }
   </style>
 </head>
-​
+
 <body>
   <div id='root'></div>
-​
   <script type='text/babel'>
-      const { render } = ReactDOM;
-      const { createElement, Component } = React;
-      const { HashRouter, Link, Route, Switch, Redirect } = ReactRouterDOM;
-​
-      const Nav = ({companies})=> {
-​
-        return (<div className="nav">
-        <Link to="/">ACME</Link>
-        <Link to="/companies">Companies({companies.length})</Link>
-        </div>)
-​
-      }
-​
-      const Companies = ({companies})=> {
-        console.log(companies)
-        return(
-          <ul> {
-             companies.map(company => <li key={company.id}>{company.name}</li>)
-          }
-          </ul>
-          )
-        this.setState({companies})
-      }
-​
-      class App extends Component {
-        constructor(){
-          super();
-          this.state = {
-            companies: []
-          }
-        }
-        async componentDidMount(){
-          const companies = (await axios.get('https://acme-users-api-rev.herokuapp.com/api/companies')).data;
-          this.setState({companies});
-        }
-        render(){
-          const {companies} = this.state;
-          return (
-            <HashRouter>
-            <Route render={()=> <Nav companies={companies}/>}/>
-            <Route render={()=> <Companies companies={companies}/>}/>
-            </HashRouter>
-          );
-        }
-​
+    const { render } = ReactDOM;
+    const { createElement, Component } = React;
+    const { HashRouter, Link, Route, Switch, Redirect } = ReactRouterDOM;
+
+    const Nav = ({companies})=> {
+      return (<div className="nav">
+      <Link to="/">ACME</Link>
+      <Link to="/companies">Companies({companies.length})</Link>
+      </div>)
     }
-const root = document.querySelector("#root");
-render(<App />, root);
-        </script>
-​
+    const Companies = ({companies})=> {
+      console.log(companies)
+      return
+      (
+        <ul> 
+          {
+            companies.map(company => <li key={company.id}>{company.name}</li>)
+          }
+        </ul>
+      )
+      this.setState({companies})
+    }
+
+    class App extends Component {
+      constructor() {
+        super();
+        this.state = {
+          companies: []
+        }
+      }
+      async componentDidMount() {
+        const companies = (await axios.get('https://acme-users-api-rev.herokuapp.com/api/companies')).data;
+        this.setState({companies});
+      }
+      render() {
+        const {companies} = this.state;
+        return (
+          <HashRouter>
+          <Route render={()=> <Nav companies={companies}/>}/>
+          <Route render={()=> <Companies companies={companies}/>}/>
+          </HashRouter>
+        );
+      }
+    }
+    const root = document.querySelector("#root");
+    render(<App />, root);
+  </script>
 </body>
-​
 </html>
